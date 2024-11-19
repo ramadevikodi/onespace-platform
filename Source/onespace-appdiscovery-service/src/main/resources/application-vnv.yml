@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: core-services
+  config:
+    import:
+      - "aws-parameterstore:/epo/${spring.application.name}/${spring.profiles.active}/"
+      - "aws-secretsmanager:/epo/${spring.application.name}/${spring.profiles.active}/iam"
+      - "aws-secretsmanager:/epo/${spring.application.name}/${spring.profiles.active}/sentinel"
+      - "aws-secretsmanager:/epo/${spring.application.name}/${spring.profiles.active}/database"
+      - "aws-secretsmanager:/epo/${spring.application.name}/${spring.profiles.active}/aws"
+      - "aws-secretsmanager:/epo/${spring.application.name}/${spring.profiles.active}/encryption"
+  datasource:
+#    url: jdbc:postgresql://localhost:5433/${dbInstanceIdentifier} #For SSH to DB local testing
+    url: jdbc:postgresql://${host}:${port}/${dbInstanceIdentifier}
+    username: ${dbusername}
+    password: ${dbpassword}
+
+
+
+

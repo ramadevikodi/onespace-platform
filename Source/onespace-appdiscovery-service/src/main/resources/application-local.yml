@@ -1,0 +1,73 @@
+server:
+  port: 8081
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: core-services
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+  datasource:
+    url: ${db_url}
+    username: ${db_user}
+    password: ${db_password}
+  messages:
+    basename=locale/error_messages
+    encoding=UTF-8
+  flyway:
+    enabled: true
+    locations: classpath:/db/migration/*
+    baselineOnMigrate: true
+
+
+rateLimit:
+  capacity: 400
+  refillTokens: 10
+  refillPeriod: 1
+
+iam:
+  tokenbaseurl: https://iam-extn-development-us-east-1.hsp.philips.com
+  tokenurl: /authorize/oauth2/v1/token
+  baseurl: https://iam-development.us-east.philips-healthsuite.com
+  useridmurl: https://idm-development.us-east.philips-healthsuite.com
+  userUrl: /authorize/scim/v2/Users
+  groupUrl: /authorize/identity/Group
+  userUrlForGroup: /authorize/scim/v2/Groups
+  introspectUrl: /authorize/oauth2/introspect
+  revokeUrl: /authorize/oauth2/revoke
+  clientId: ${iam_client_id}
+  clientSecret: ${iam_client_secret}
+  timeRemainingForTokenExpiry: 300 # Unit = seconds
+  issuer: ${iam_issuer}
+  audience: ${iam_audience}
+  serviceidentityprivatekey: ${iam_private_key}
+
+sentinel:
+  baseurl: https://e2esbxphilips.dev.sentinelcloud.com
+  username: ${sentinel_user}
+  password: ${sentinel_password}
+
+aws:
+  iconbucketName: epo-application-icons/icons
+  accessKey: ${aws_access_key}
+  secretKey: ${aws_secret_key}
+  region: ${aws_region}
+  senderEmail: ${sender_email}
+  sesConfigSetName: onespace-ses-delivery-tracker
+
+crypto:
+  password: ${password}
+
+allowedOrigins: https://d1u65tovhg2ye9.cloudfront.net/, http://localhost:8085, *.philips.com
+
+capturePerformanceMetrics: ${capture-performance-metrics}
+
+sse:
+  appnotification:
+    cron: 30000
+
+

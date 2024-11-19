@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: core-services
+  profiles:
+    active: ${profile}
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  task:
+    scheduling:
+      pool:
+        size: 5
+      thread-name-prefix: ScheduledTask-
+
+server:
+  error:
+    include-message: always
+
+logging:
+  config: classpath:log4j2-${profile}.xml # TODO:: Use a single log4j2.xml and read properties from respective application-{env}.yml
+
+app:
+  discovery:
+    cron:
+      mark-expired-actions: ${mark-expired-actions-cron}

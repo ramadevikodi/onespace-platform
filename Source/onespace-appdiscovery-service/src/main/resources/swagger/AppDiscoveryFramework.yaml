@@ -1,0 +1,3479 @@
+openapi: 3.0.3
+info:
+  title: OneSpace Platform APIs
+  description: |-
+    __OneSpace Platform APIs__ enables OneSpace Portal to register, list & approve Philips  serviceability applications.
+  version: 1.0.0
+servers:
+  - url: https://apps.onespace-{region}-{env}.com/api
+tags:
+  - name: BusinessUnit APIs
+    description: APIs that allow onboarding of Business Unit to OneSpace
+  - name: Customer APIs
+    description: APIs that enable consumers to register, retrieve and update Customer information in OneSpace Platform.
+  - name: Proposition APIs
+    description: APIs that enable registration, retrieval and updating Proposition information in OneSpace Platform..
+  - name: Application APIs
+    description: Enable Philips Businesses to register applications, retrieve metadata about applications, approve or reject them based on well defined workflows.
+  - name: Licensing APIs
+    description: Enable applications to Consume and Release licenses.
+  - name: Session Management APIs
+    description: Enable applications to maintain a session with OneSpace backend.
+  - name: Metadata APIs
+    description: Provide or update metadata such as list of Modalities, Specialities, Languages etc.
+  - name: Non OneSpace Application APIs
+    description: Enable hospital administrators to register any non OneSpace application with OneSpace Platform. The goal of supporting non OneSpace applications is to ease launching of the applications by making them appear as tiles in the OneSpace Portal along with other applications.
+  - name: Action APIs
+    description: Action APIs
+
+paths:
+  /Proposition:
+    get:
+      tags:
+        - Proposition APIs
+      summary: Retrieves the details of all Propositions in OneSpace Platform
+      description: |
+        This API retrieves all Proposition details registered within OneSpace Platform. Access to this operation requires **EPO_APP.LIST** role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+
+      responses:
+        '200':
+          description: Propositions retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropositionList'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+    post:
+      tags:
+        - Proposition APIs
+      summary: Registers a Proposition with OneSpace Platform
+      description: |
+        This API enables registration of new Proposition within OneSpace Platform. __EPO_APP.REGISTER__ permission is required to execute this operation.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+
+      requestBody:
+        description: Proposition registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropositionRequest'
+        required: true
+      responses:
+        '201':
+          description: Proposition registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropositionID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /Proposition/{id}:
+    put:
+      tags:
+        - Proposition APIs
+      summary: Updates the Proposition Details
+      description: |
+        This API updates specific Proposition information by its Id within OneSpace Platform. __EPO_APP.UPDATE__ permission is required to execute this operation.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: The ID of the proposition to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      requestBody:
+        description: Proposition details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropositionRequest'
+        required: true
+      responses:
+        '200':
+          description: Proposition successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proposition'
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+    get:
+      tags:
+        - Proposition APIs
+      summary: Retrieves the details of a registered Proposition in OneSpace Platform
+      description: |
+        This API retrieves individual Proposition details on the basis of Proposition Id registered within OneSpace Platform. Access to this operation requires **EPO_APP.LIST** role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: Retrieves single Proposition
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Proposition retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proposition'
+
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /Application:
+    post:
+      tags:
+        - Application APIs
+      summary: Registers an application with the OneSpace Platform
+      description: |
+        A Session Cookie with 
+        __EPO_APP.REGISTER__ permission is required to execute this operation.
+
+      requestBody:
+        description: Application registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        '201':
+          description: Application registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    get:
+      tags:
+        - Application APIs
+      summary: Lists applications entitled for the logged in user
+      description: |
+        A Session Cookie with 
+        __EPO_APP.LIST__ permission is required to execute this operation.
+        Search type supported is equals and case insensitive with AND multi-value search support.
+
+      parameters:
+        - name: status
+          in: query
+          description: The status of the application
+          schema:
+            type: string
+            format: uuid
+        - name: deployment
+          in: query
+          description: >-
+            Setting the "deployment" criteria to a value equals to "multi-tenant" ensures that only multi-tenant applications are retrieved by this API. Applications that have deployment values such as per-region, instance etc. are not considered.
+          schema:
+            type: string
+            example: 'multi-tenant, per-region, instance, not-applicable'
+        - name: market
+          in: query
+          description: >-
+            Setting the "market" criteria to a value equals to NAM, EU ensures that only applications that have been rolled out to NAM and EU markets are fetched.
+          schema:
+            type: string
+            example: 'NAM, EU etc.'
+        - name: region
+          in: query
+          description: >-
+            An application could be rolled out in multiple regions such as NOR, DACH. The region parameter filters applications based on the region name"
+          schema:
+            type: string
+            example: 'NOR, DACH etc.'
+        - name: country
+          in: query
+          description: >-
+            Country where the application available.
+          schema:
+            type: string
+            example: 'United States, Canada etc.'
+        - name: sub-region
+          in: query
+          description: >-
+            Sub-region where the application available.
+          schema:
+            type: string
+            example: 'Central, South, North etc.'
+        - name: language
+          in: query
+          description: >-
+            An application could support multiple languages. The Language parameter enables filtering of applications based on the specified language(s).
+          schema:
+            type: string
+            example: 'Portuguese, Deutsch etc.'
+        - name: sso-enabled
+          in: query
+          description: >-
+            An application could support Single Sign On. The sso-enabled parameter enables filtering of applications based on specified value.
+          schema:
+            type: boolean
+            example: true
+        - name: specialty
+          in: query
+          description: >-
+            An application could support multiple specialities. The speciality parameter enables filtering of applications based on the specified speciality.
+          schema:
+            type: string
+            example: 'cardiology, oncology etc.'
+        - name: modality
+          in: query
+          description: >-
+            An application could support multiple modalities. The modality parameter enables filtering of applications based on the specified modality.
+          schema:
+            type: string
+            example: 'ct, mr, ultrasound etc.'
+        - name: category
+          in: query
+          description: >-
+            An application could support multiple categories. The category parameter enables filtering of applications based on the specified category.
+          schema:
+            type: string
+            example: 'admin app, business app etc.'
+
+      responses:
+        '200':
+          description: Applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Application/{id}:
+    patch:
+      tags:
+        - Application APIs
+      summary: Updates the metadata associated with a registered application
+      description: |
+        A Session Cookie with 
+        __EPO_APP.UPDATE__ permission is required to execute this operation.
+
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the application to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      requestBody:
+        description: Application details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        '200':
+          description: Application updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    get:
+      tags:
+        - Application APIs
+      summary: Retrieves the details of a registered application
+      description: |
+        A Session Cookie with 
+        __EPO_APP.LIST__ permission is required to execute this operation.
+
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the application
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        '200':
+          description: Application retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+  /ApplicationFilterCriteria:
+    get:
+      tags:
+        - Application APIs
+      summary: Retrieves the filter criteria for the logged in user
+      description: |
+        A Session Cookie with 
+        __EPO_APP.LIST__ permission is required to execute this operation.
+
+      responses:
+        '200':
+          description: Applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationFilterCriteria'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+
+  /License/$Consume:
+    post:
+      tags:
+        - Licensing APIs
+      summary: Consumes an application license
+      description: |
+        A Session Cookie with 
+        __EPO_APP.LIST__ permission is required to execute this operation.
+
+      requestBody:
+        description: Application ID for which license is requested
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseRequest'
+        required: true
+      responses:
+        '201':
+          description: License consumed successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+  /License/$Release:
+    post:
+      tags:
+        - Licensing APIs
+      summary: Releases an application license
+      description: |
+        A Session Cookie with 
+        __EPO_APP.LIST__ permission is required to execute this operation.
+
+      requestBody:
+        description: Application ID for which license is released
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseRequest'
+        required: true
+      responses:
+        '201':
+          description: License released successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+  /Customer:
+    post:
+      tags:
+        - Customer APIs
+      summary: Registers a Customer with OneSpace Platform
+      description: |
+        This API enables registration of new Customer within OneSpace Platform. __EPO_APP.REGISTER__ permission is required to execute this operation.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+      requestBody:
+        description: Customer Registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        '201':
+          description: Customer registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+    get:
+      tags:
+        - Customer APIs
+      summary: Retrieve all Customers Details
+      description: |
+        This API retrieves all Customers details registered within OneSpace Platform. Access to this operation requires EPO_APP.LIST role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+      responses:
+        '200':
+          description: Customers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerList'
+        '401':
+          description: Unauthorized
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+  /Customer/{id}:
+    put:
+      tags:
+        - Customer APIs
+      summary: Updates the customer Details
+      description: |
+        This API updates specific Customer information by its Id registered within OneSpace Platform. __EPO_APP.UPDATE__ permission is required to execute this operation.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: The ID of the customer to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      requestBody:
+        description: Customer details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        '200':
+          description: Record are successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+    get:
+      tags:
+        - Customer APIs
+      summary: Retrieves the details of a registered Customer in OneSpace Platform
+      description: |
+        This API retrieves individual Customer details on the basis of Customer Id registered within OneSpace Platform. Access to this operation requires EPO_APP.LIST role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: Retrieves single Customer
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Customer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /Session/Cookie:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Creates a new Session with OneSpace backend and returns a cookie.
+      description: |
+        Session is represented by a HTTP Cookie. The session cookie will be refreshed automatically when the original access token is about to expire.
+      security: []
+      requestBody:
+        description: Provide the authorization code and redirect URI
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              example: grant_type=authorization_code&code=ifggikAMzs_51TNwuxzRqOlrm8A&redirect_uri=http://localhost:8085/launchpad/
+        required: true
+      responses:
+        '200':
+          description: Successfully authenticated. The access & refresh token is returned as cookies. This needs to be included in subsequent requests.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: onespacecookie=8279c45b58f7c29af1b48ec4019e6de6a4620c206f0ea53fbb494eb735bb6a9df64c5c365cd40747c640ef130cc1dad68c27bcaefa72d2f93bcc673dec142a0514ac802053482d299584678de9f5abfd9a7feacfb64d7c; Path=/; Max-Age=1799; Expires=Fri, 21 Jun 2024 11:53:06 GMT; Secure; SameSite=None
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Session/Token:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Creates a new Session with OneSpace backend and returns bearer token.
+      description: |
+        Session is represented by a token.
+      security: []
+      requestBody:
+        description: Provide the authorization code and redirect URI
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              example: grant_type=authorization_code&code=ifggikAMzs_51TNwuxzRqOlrm8A&redirect_uri=http://localhost:8085/launchpad/
+        required: true
+      responses:
+        '200':
+          description: Successfully authenticated. The access & refresh token is returned. This needs to be included in subsequent requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Session/$Introspect:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Returns the metadata associated with the Session Cookie / Bearer token
+      responses:
+        '200':
+          description: Token metadata returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntrospectionResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Session/$Exchange:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Exchanges OneSpace issued Cookie with Access Token & Refresh Token
+      description: |
+        Enables a client registered in HSP IAM to present a HTTP cookie and get the access token, refresh token associated with it. Only cookies issued by OneSpace are allowed.
+      security: []
+      parameters:
+        - in: header
+          name: X-OneSpace-Cookie
+          description: The encrypted OneSpace cookie value
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Details of client registered with HSP IAM
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+        required: true
+      responses:
+        '200':
+          description: Access & Refresh token returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Session/$Logout:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Logs out the user by revoking the access token & invalidating the session cookies.
+      responses:
+        '200':
+          description: User logged out successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Session/$Refresh:
+    post:
+      tags:
+        - Session Management APIs
+      summary: Refreshes the session by issuing a new Session Cookie.
+      responses:
+        '200':
+          description: Session refreshed successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Icon/{name}:
+    post:
+      tags:
+        - Metadata APIs
+      summary: Uploads an icon to S3
+      description: |
+        A Session Cookie with 
+        __EPO_APP.REGISTER__  or __EPO_APP.UPDATE__ permission is required to execute this operation.
+      parameters:
+        - name: name
+          in: path
+          description: |
+            Application name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Icon image of the application
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Icon Image uploaded successfully.
+          content:
+            image/png:
+              schema:
+                $ref: '#/components/schemas/IconResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    patch:
+      tags:
+        - Metadata APIs
+      summary: Uploads and updates an icon to S3
+      description: |
+        A Session Cookie with 
+        __EPO_APP.UPDATE__ permission is required to execute this operation.
+      parameters:
+        - name: name
+          in: path
+          description: |
+            Application name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Icon image of the application
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Icon Image uploaded successfully.
+          content:
+            image/png:
+              schema:
+                $ref: '#/components/schemas/IconResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Speciality:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns a list of Specialities (such as Anesthesiology, Cardiology, Radiology etc. )
+      responses:
+        '200':
+          description: Speciality returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpecialityResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Modality:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns a list of Modalities (such as CT, MR, Ultrasound etc.)
+      responses:
+        '200':
+          description: Modality returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModalityResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Language:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns a list of languages (such as English, Dutch, French etc.)
+      responses:
+        '200':
+          description: Modality returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LanguageResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Market:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns a list of Markets (such as NAM, EU, Central Asia etc. )
+      responses:
+        '200':
+          description: Modality returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Market'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Business:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns information about Business Segment, Cluster and Unit.
+      responses:
+        '200':
+          description: Business Unit returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessUnitResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Category:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns Application category (such as IT, Clinical, Admin etc.)
+      responses:
+        '200':
+          description: Applciation category returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /ApplicationStatus:
+    get:
+      tags:
+        - Metadata APIs
+      summary: Returns Application status (such as Draft, Approved, Cancelled etc.)
+      responses:
+        '200':
+          description: Applciation status returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationStatusResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '405':
+          $ref: '#/components/responses/405'
+  /Notification:
+    post:
+      tags:
+        - Notification APIs
+      summary: Registers an notification with the given payload
+      description: |
+        A OAuth2.0 Bearer token of a subject to execute this operation.
+      requestBody:
+        description: Notification details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      responses:
+        '201':
+          description: Notification triggered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    get:
+      tags:
+        - Notification APIs
+      summary: Lists notifications entitled for the logged in user
+      description: |
+        A OAuth2.0 Bearer token of a subject to execute this operation.
+      responses:
+        '200':
+          description: Notification retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Notification/$Read:
+    post:
+      tags:
+        - Notification APIs
+      summary: Marks the notifications as READ for the given set of noitification identifiers
+      description: |
+        A OAuth2.0 Bearer token of a subject to execute this operation.
+
+      requestBody:
+        description: Notification details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadNotificationList'
+        required: true
+      responses:
+        '201':
+          description: Notification read successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Action:
+    post:
+      tags:
+        - Action APIs
+      summary: To register an action
+      description: A session cookie with EPO_APP.LIST permission is required to execute this operation.
+      requestBody:
+        description: Action details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Action'
+        required: true
+      responses:
+        '201':
+          description: Action created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    get:
+      tags:
+        - Action APIs
+      summary: To retrieve an action
+      description: A session cookie with EPO_APP.LIST permission is required to execute this operation.
+      responses:
+        '201':
+          description: Action retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    patch:
+      tags:
+        - Action APIs
+      summary: Updates the action status
+      description: |
+        A Session Cookie with 
+        __EPO_APP.UPDATE__ permission is required to execute this operation.
+
+      requestBody:
+        description: Action details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Records are successfully updated.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Records are successfully updated
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /Notification/Email:
+    post:
+      tags:
+        - Notification APIs
+      summary: Sends notification via email
+      description: |
+        A session cookie with __EPO_APP.LIST__ permission is required to execute this operation. If notification type is provided, a templated email based on the notification type is sent. Else a simple email with subject and message is sent.
+      requestBody:
+        description: Notification details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailNotification'
+        required: true
+      responses:
+        '204':
+          description: Email notification sent successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+  /BusinessUnit:
+    post:
+      tags:
+        - BusinessUnit APIs
+      summary: Register a business unit with OneSpace Platform
+      description: |
+        This API enables Business unit within Philips to onboard onto OneSpace Platform and leverage the features of the platform. Access to this operation required **EPO_APP.REGISTER** role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+
+      requestBody:
+        description: Business unit registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessRequest'
+        required: true
+      responses:
+        '201':
+          description: Business unit registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /BusinessUnit/{id}:
+    get:
+      tags:
+        - BusinessUnit APIs
+      summary: Get business unit by ID
+      description: |
+        This API retrieves specific Business unit by Id, allowing Philips to access the details of an individual Business unit within OneSpace Platform. Access to this operation required **EPO_APP.LIST** role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: Business unit retrieved by ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Business Unit retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+
+    put:
+      tags:
+        - BusinessUnit APIs
+      summary: Update business unit by ID
+      description: |
+        This API updates specific Business unit by Id, enabling Philips to modify the information of an existing Business unit within OneSpace Platform.Access to this operation required **EPO_APP.UPDATE** role permission.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/APIVersion'
+        - name: id
+          in: path
+          description: ID of the business unit to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: updated business unit by ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessRequest'
+        required: true
+      responses:
+        '200':
+          description: |
+            Business unit updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+
+  /NonOneSpaceApplication:
+    post:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Registers an non OneSpace application with the OneSpace Platform.
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.REGISTER__ permission is required to execute this operation. \
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      requestBody:
+        description: Non OneSpace Application registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NonOneSpaceApplication'
+        required: true
+      responses:
+        '201':
+          description: Non OneSpace Application registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonOneSpaceApplication'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    get:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Lists non OneSpace applications entitled for the logged in user.
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.LIST__ permission is required to execute this operation. \
+        Search type supported is equals and case insensitive with AND multi-value search support.
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      responses:
+        '200':
+          description: Non OneSpace Applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonOneSpaceApplicationList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /NonOneSpaceApplication/$order:
+    post:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Updates the metadata associated with a registered non OneSpace applications.
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.UPDATE__ permission is required to execute this operation. \
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      requestBody:
+        description: Non OneSpace Applications details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NonOneSpaceApplicationOrderList'
+        required: true
+      responses:
+        '204':
+          description: NonOneSpace Applications updated successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+  /NonOneSpaceApplication/{id}:
+    get:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Retrieves the details of a registered non OneSpace application.
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.LIST__ permission is required to execute this operation. \
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the non OneSpace application.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Non OneSpace application retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonOneSpaceApplication'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    patch:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Updates the metadata associated with a registered non OneSpace application
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.UPDATE__ permission is required to execute this operation. \
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the non OneSpace application to update.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Non OneSpace Application details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NonOneSpaceApplication'
+        required: true
+      responses:
+        '204':
+          description: NonOneSpace Application updated successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+    delete:
+      tags:
+        - Non OneSpace Application APIs
+      summary: Deletes the registered non OneSpace application.
+      description: |
+        A Session Cookie with 
+        __ONESPACE_NON_ONESPACEAPP.DELETE__ permission is required to execute this operation. \
+        A OAuth2.0 Bearer token of a user identity to execute this operation.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the non OneSpace application.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: NonOneSpace Application deleted successfully.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '409':
+          $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413'
+        '415':
+          $ref: '#/components/responses/415'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+
+components:
+  schemas:
+    Registration:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          description: Unique Identifier that represents an application in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          description: Name of the application
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: DoseWise Portal
+        description:
+          description: Description of the application
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: DoseWise Portal is a vendor-agnostic, web-based solution that collects, measures, analyzes, and reports patient & staff radiation exposure, assisting you to take control of quality of care, efficiency, patient and staff safety.
+        version:
+          description: Version of the application
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: 1.0.0
+        registeredBy:
+          description: Email address of the application integrator requesting the application registration
+          type: string
+          minLength: 3
+          maxLength: 120
+          example: john.doe@philips.com
+        registeredDateTime:
+          type: string
+          format: date-time
+          description: Date & Time at which the application was approved by the approver
+          example: 2024-01-22T13:09:04+0000
+        isSSOEnabled:
+          description: Is SSO Enabled
+          type: boolean
+          example: true
+        isMFE:
+          description: is this a microfrontend application
+          type: boolean
+          example: false
+        languages:
+          description: The languages supported by the applications
+          type: array
+          items:
+            $ref: '#/components/schemas/Value'
+          example: [
+            { id: 330e8400-e29b-41d4-a716-446655440000, name: en-US},
+            { id: 550e8400-e29b-41d4-a716-446655440000, name: pt-BR}]
+        specialities:
+          description: One or more medical specialties that this application is associated with
+          type: array
+          items:
+            $ref: '#/components/schemas/Value'
+          example: [
+            { id: 330e8400-e29b-41d4-a716-446655440000, name: Radiology},
+            { id: 550e8400-e29b-41d4-a716-446655440000, name: Cardiology}]
+        modalities:
+          description: One or more modalities that this application belongs to
+          type: array
+          items:
+            $ref: '#/components/schemas/Value'
+          example: [
+            { id: 430e8400-e29b-41d4-a716-446655440000, name: CT},
+            { id: 650e8400-e29b-41d4-a716-446655440000, name: MR}]
+        category:
+          allOf:
+            - $ref: '#/components/schemas/Value'
+          example: { id: 430e8400-e29b-41d4-a716-446655440000, name : BUSINESSAPP }
+
+    Value:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents a lookup value
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          description: Display name of the lookup value
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Oncology
+
+    Approval:
+      type: object
+      properties:
+        approver:
+          description: Email address of the approver of the application
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: approver@philips.com
+        publishedDateTime:
+          type: string
+          format: date-time UTC format
+          description: Date & Time at which the application was published by the L2 approver
+          example: 2024-09-05T17:59:35Z
+        propositions:
+          description: One or more propositions that this application is approved for
+          type: array
+          items:
+            $ref: '#/components/schemas/Proposition'
+        l2comments:
+          description: Reason for approval / rejection
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Provide Prod URL instead of CT URL
+        markets:
+          description: One or more markets that this application is rolled out for
+          type: array
+          items:
+            $ref: '#/components/schemas/Market'
+
+    Ownership:
+      type: object
+      properties:
+        costCenter:
+          description: Cost center owning the application cost
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: IN5CHS0703
+        l1comments:
+          description: Reason for L1 approval / rejection
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Provide Prod URL instead of CT URL
+
+    Deployment:
+      type: object
+      properties:
+        url:
+          description: Url of the application
+          type: string
+          minLength: 3
+          maxLength: 255
+          format: url
+          example: https://www.usa.philips.com/healthcare/resources/landing/dosewise-offboarding
+        icon:
+          description: Icon of the application
+          type: string
+          minLength: 3
+          maxLength: 2000
+          format: url
+          example: https://d1u65tovhg2ye9.cloudfront.net/icons/doswiseportal.png
+        mode:
+          description: Application deployment mode
+          allOf:
+            - $ref: '#/components/schemas/Value'
+          example: { id: 430e8400-e29b-41d4-a716-446655440000, name : INSTANCE }
+
+    Application:
+      type: object
+      properties:
+        registration:
+          $ref: '#/components/schemas/Registration'
+        deployment:
+          $ref: '#/components/schemas/Deployment'
+        ownership:
+          $ref: '#/components/schemas/Ownership'
+        approval:
+          $ref: '#/components/schemas/Approval'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Value'
+          example: { id: 430e8400-e29b-41d4-a716-446655440000, name : DRAFT }
+        lastModifiedDateTime:
+          type: string
+          format: date-time
+          description: Date & Time at which the application was last modified by requestor
+          example: 2024-01-22T13:09:04+0000
+        enabledForOrg:
+          description: Indicates if the Organization (that the currently logged in user is part of) has access to the application
+          type: boolean
+          example: true
+        enabledForUser:
+          description: Indicates if the current logged in user has access to the application
+          type: boolean
+          example: true
+        workflowParticipants:
+          $ref: '#/components/schemas/GroupList'
+
+    AppStatus:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          description: status of the application
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Awaiting L1 Aprroval
+
+
+    ApplicationList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Application"
+
+    ApplicationID:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents an application in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+
+    LicenseRequest:
+      type: object
+      properties:
+        applicationId:
+          description: Unique Identifier that represents an application in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+
+    Customer:
+      type: object
+      required:
+        - Name
+        - Market
+      properties:
+        Name:
+          type: string
+          example: Mayo Clinic
+        Description:
+          type: string
+          example: Example Mayo Clinic is a private American academic medical center focused on integrated health care, education, and research
+        Address:
+          type: string
+          example: Jacksonville, Florida, USA
+        EmailContact:
+          type: string
+          format: email
+          example: contact@example.com
+        Active:
+          type: boolean
+          example: true
+        Market:
+          type: string
+          example: d46e8149-2cb3-455b-9572-dbdf0eb424c0
+          format: uuid
+        IAM_ORG_ID:
+          type: string
+          nullable: true
+          example: HSP12345
+
+    CustomerID:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents an customer in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        Name:
+          type: string
+          example: Mayo Clinic
+        Description:
+          type: string
+          example: Mayo Clinic is a private American academic medical center focused on integrated health care, education, and research
+        Address:
+          type: string
+          example: Jacksonville, Florida, USA
+        EmailContact:
+          type: string
+          format: email
+          example: contact@example.com
+        Active:
+          type: boolean
+          example: true
+        Market:
+          type: string
+          example: d46e8149-2cb3-455b-9572-dbdf0eb424c0
+          format: uuid
+        IAM_ORG_ID:
+          type: string
+          nullable: true
+          example: HSP12345
+
+    CustomerList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Customer"
+
+    CustomerPutRequest:
+      type: array
+      items:
+        $ref: "#/components/schemas/CustomerUpdate"
+
+    CustomerUpdate:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Example Mayo Clinic
+        Description:
+          type: string
+          example: Example Mayo Clinic is a private American academic medical center focused on integrated health care, education, and research
+        Address:
+          type: string
+          example: Jacksonville, Florida, USA
+        Contact:
+          type: string
+          format: email
+          example: contact@example.com
+        Active:
+          type: boolean
+          example: true
+        Market:
+          type: string
+          example: NAM
+        IAM_ORG_ID:
+          type: string
+          nullable: true
+          example: HSP12345
+
+        source:
+          type: object
+          properties:
+            id:
+              description: Unique ID generated by OneSpace that represents a source. Eg. application
+              type: string
+              example: "0d9972a1-5715-4f88-a3b5-e00826ae81b1"
+
+    PropositionRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          example: L0 Service Management pack
+        description:
+          type: string
+          example: Managed Technology Services is a long term strategic partnership contract that involves technology assessment and planning to identify and track the performance of healthcare technology over the term of the contract. This includes equipment replacements, upgrades, KPI selection, monitoring and reporting
+        isActive:
+          type: boolean
+          example: true
+
+    Proposition:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          description: Unique Identifier that represents a proposition in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          description: Name of the proposition
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: L0 Service Management pack
+        description:
+          description: Description of the application
+          type: string
+          minLength: 3
+          maxLength: 400
+          example: Managed Technology Services is a long term strategic partnership contract that involves technology assessment and planning to identify and track the performance of healthcare technology over the term of the contract. This includes equipment replacements, upgrades, KPI selection, monitoring and reporting
+        isActive:
+          description: Boolean indicator of whether or not the Proposition is currently active.
+          type: boolean
+          example: true
+        applications:
+          type: array
+          items:
+            type: string
+          example: [ "1f76732b-861b-4997-b1f4-788eab3c0cba",
+                     "7583f5f4-ea78-442a-99f4-0caddd45fb19"]
+
+    PropositionList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Proposition"
+
+    PropositionID:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents a proposition in OneSpace platform
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          description: Name of Proposition
+          type: string
+          example: L0 Service Management pack
+        description:
+          description: Discription of Proposition
+          type: string
+          example: Managed Technology Services is a long term strategic partnership contract that involves technology assessment and planning to identify and track the performance of healthcare technology over the term of the contract. This includes equipment replacements, upgrades, KPI selection, monitoring and reporting
+        isActive:
+          description: Boolean indicator of whether or not the Proposition is currently active.
+          type: boolean
+          example: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          description: Error Description message
+          type: string
+          example: Error while processing Request
+        code:
+          description: Error code
+          type: string
+          example: error_code
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: error_category
+
+    BadRequestErrorResponse:
+      type: object
+      properties:
+        message:
+          description: Bad Request Error Description
+          type: string
+          example: Invalid input data provided.
+        code:
+          description: Error code
+          type: string
+          example: bad_request
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: client error
+
+    BadRequestError:
+      type: object
+      properties:
+        issue:
+          description: Error for Bad Request scenerios
+          type: array
+          items:
+            $ref: "#/components/schemas/BadRequestErrorResponse"
+
+    UnAuthorizedErrorResponse:
+      type: object
+      properties:
+        message:
+          description: UnAuthorized Operation Error Description
+          type: string
+          example: UnAuthorized Access
+        code:
+          description: Error code
+          type: string
+          example: invalid_token
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: invalid_token
+
+    UnAuthorizedRequestError:
+      type: object
+      properties:
+        issue:
+          description: Error for Bad Request scenerios
+          type: array
+          items:
+            $ref: "#/components/schemas/UnAuthorizedErrorResponse"
+
+    Business:
+      type: object
+      required:
+        - name
+        - cluster
+        - businessSegment
+      properties:
+        id:
+          description: Unique identifier of the business unit (generated by OneSpace)
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        cluster:
+          description: cluster
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Precision Diagnosis
+        businessSegment:
+          description: business segment
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Diagnosis and Treatment
+        name:
+          description: business unit name
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Ultrasound
+        description:
+          description: business unit name description
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Echography solutions focused on diagnosis, treatment planning and guidance for cardiology, general imaging, obstetrics/gynecology, and point-of-care applications
+
+    BusinessRequest:
+      type: object
+      required:
+        - name
+        - cluster
+        - businessSegment
+      properties:
+        cluster:
+          description: cluster
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Precision Diagnosis
+        businessSegment:
+          description: business segment
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Diagnosis and Treatment
+        name:
+          description: business unit name
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Ultrasound
+        description:
+          description: business unit name description
+          type: string
+          minLength: 3
+          maxLength: 2000
+          example: Echography solutions focused on diagnosis, treatment planning and guidance for cardiology, general imaging, obstetrics/gynecology, and point-of-care applications
+
+    ResourceNotFoundErrorResponse:
+      type: object
+      properties:
+        message:
+          description: Error Message for Resource Not Found
+          type: string
+          example: Not Found
+        code:
+          description: Error code
+          type: string
+          example: resource_not_found
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: resource_not_found
+
+    ResourceNotFoundError:
+      type: object
+      properties:
+        issue:
+          description: Error for Bad Request scenerios
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceNotFoundErrorResponse"
+
+    ConflictErrorResponse:
+      type: object
+      properties:
+        message:
+          description: Error Message for Conflicting Information
+          type: string
+          example: Resource already exists or Conflict with current state of resource.
+        code:
+          description: Error code
+          type: string
+          example: duplicate_key
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: duplicate_key
+
+    ConflictError:
+      type: object
+      properties:
+        issue:
+          description: Error for Bad Request scenerios
+          type: array
+          items:
+            $ref: "#/components/schemas/ConflictErrorResponse"
+
+    InternalServerErrorResponse:
+      type: object
+      properties:
+        message:
+          description: Error Message for Internal Server Error
+          type: string
+          example: The server encountered an unexpected condition which prevented it from fulfilling the request.
+        code:
+          description: Error code
+          type: string
+          example: database_error
+        source:
+          description: Error Source
+          type: string
+          example: application_discovery_service
+        category:
+          description: Error Category
+          type: string
+          example: database_error
+
+    InternalServerError:
+      type: object
+      properties:
+        issue:
+          description: Error for Bad Request scenerios
+          type: array
+          items:
+            $ref: "#/components/schemas/InternalServerErrorResponse"
+
+
+    Error:
+      type: object
+      properties:
+        issue:
+          description: A detailed human-readable message
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    ClientRequest:
+      type: object
+      properties:
+        clientId:
+          description: ID of the client registered with HSP IAM
+          type: string
+          example: 05217113-b667-4c7d-9526-9cf166c9417a
+        clientSecret:
+          description: Secret of the client registered with HSP IAM
+          type: string
+          example: Secret@123
+
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          description: Access token represented by the cookie
+          type: string
+          example: j-aNLUrx-FMz_7iglxlZKT5Km7Y
+        refreshToken:
+          description: Refresh token represented by the cookie
+          type: string
+          example: yrmO53jcEPCL6eVxxiczDW1ABN4
+        expiresIn:
+          description: The remaining time in seconds until this access token is valid.
+          type: integer
+          example: 1800
+
+    IntrospectionResponse:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Boolean indicator of whether or not the presented token is
+            currently active.
+        scope:
+          type: string
+          description: A JSON string containing a space-separated list of scopes associated
+            with this token, in the format described in Section 3.3 of OAuth 2.0 [RFC6749].
+        client_id:
+          type: string
+          description: Client identifier for the OAuth 2.0 client that requested this
+            token. ***Kindly note that the client identifier shall be returned in lower case,
+            even if the OAuth 2.0 client has been created in mixed case fashion.***
+        username:
+          type: string
+          description: Human-readable login ID for the resource owner who authorized
+            this token.
+        token_type:
+          type: string
+          description: Type of the token as defined in Section 5.1 of OAuth 2.0 [RFC6749].
+        exp:
+          type: integer
+          description: Integer timestamp, measured in the number of seconds since
+            January 1 1970 UTC, indicating when this token will expire, as defined
+            in JWT [RFC7519].
+          format: int64
+        sub:
+          type: string
+          description: Subject of the token, as defined in JWT [RFC7519]. Usually
+            a machine-readable identifier of the resource owner who authorized this
+            token.
+        iss:
+          type: string
+          description: String representing the issuer of this token, as defined in
+            JWT.
+        identity_type:
+          type: string
+          description: An enumeration that indicates the type of identity.
+          enum:
+            - device
+            - user
+            - service
+            - client
+        device_type:
+          type: string
+          description: If the identity is a device this string indicates what kind
+            of device.
+        organizations:
+          $ref: '#/components/schemas/organizations'
+      example:
+        active: true
+        scope: mail sn
+        username: testuser@mycompany.com
+        exp: 1555075957
+        sub: b75c01f3-e0c0-482e-8b6b-2e6ffba71d6f
+        iss: <am_host>/oauth2/access_token
+        organizations:
+          managingOrganization: d56f2d97-843d-491b-9499-b9a3ad029fe3
+          organizationList:
+            - organizationId: d56f2d97-843d-491b-9499-b9a3ad029fe3
+              permissions:
+                - GROUP.WRITE
+                - ORGANIZATION.READ
+              organizationName: MyCompany
+              groups:
+                - MyGroup
+              roles:
+                - MYROLE
+            - organizationId: 2430bd92-e3e2-4295-aa37-d00b6fb47f2f
+              permissions:
+                - GROUP.WRITE
+                - ORGANIZATION.READ
+              organizationName: SomeCompany
+              disabled: true
+              groups:
+                - MyGroup
+              roles:
+                - MYROLE
+        client_id: MyClient
+        token_type: Bearer
+        identity_type: user
+
+    organizations:
+      type: object
+      properties:
+        managingOrganization:
+          type: string
+          description: HSDP UUID of the organization to which the identity account
+            is registered.
+        organizationList:
+          type: array
+          description: A list of organizations to which the user has been granted
+            some form of access rights.  If `org_ctx` is passed, organizationList will contain only the details of the organization in context. Organization list will be empty if `org_ctx` is passed in the request with an
+            organization where the subject of the token does not have any permissions
+            assigned in the entire parent org structure.
+          items:
+            $ref: '#/components/schemas/organization'
+    organization:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The HSDP UUID of the organization. The organizationId field
+            displays 'root', if subject of the token has memberships in HSDP root
+            organization.
+        organizationName:
+          type: string
+          description: The name of the organization.The organizationName field displays
+            'root', if subject of the token has memberships in HSDP root organization.
+        disabled:
+          type: boolean
+          description: |
+            A boolean value that specify if the organization is disabled. This property will not be 
+            returned if the organization is active.
+        permissions:
+          type: array
+          description: A set of permission names that are assigned to the subject of the
+            token in this organization.  This property will not be returned if `org_ctx`
+            is passed in the request and the subject of the token does not have any
+            permissions assigned in this organization.
+          items:
+            type: string
+        effectivePermissions:
+          type: array
+          description: >-
+            A set of permission names that are assigned to the subject of the token in
+            this organization and all the organizations in it's parent org structure.
+            This property will be returned only if `org_ctx` is passed in the request
+            and the organization is not in disabled state.
+          items:
+            type: string
+        roles:
+          type: array
+          description: A set of roles available for the user within this organization.
+          items:
+            type: string
+        groups:
+          type: array
+          description: A set of group names within the organization under which the
+            user has memberships.
+          items:
+            type: string
+    IconResponse:
+      type: object
+      required:
+        - name
+      properties:
+        Image:
+          description: Image if the Icon.
+          type: string
+          format: binary
+          example: img
+    SpecialityResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: Name of the speciality
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Cardiology
+    ModalityResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: Name of the modality
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Ultrasound
+    LanguageResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: language code
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: en-IN
+    Market:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          description: Unique Identifier that represents a Market ID
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          description: Name of the market
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: NAM
+        country:
+          description: country of the market
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: United States
+        region:
+          description: Region of the market
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: North America
+        subRegion:
+          description: Sub Region of the market
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: North
+    BusinessUnitResponse:
+      type: object
+      required:
+        - name
+      properties:
+        cluster:
+          description: cluster
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Innovation  & Strategy
+        businessSegments:
+          description: businessSegments
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: HealthSuite Services and Analytics Platform
+        name:
+          description: businessName
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Ultrasound
+    CategoryResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: name
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: BusinessApp
+    ApplicationStatusResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: status of the application
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Awaiting L1 Aprroval
+    ApplicationFilterCriteria:
+      description: The Filter criteria based on logged in user.
+      type: array
+      items:
+        $ref: '#/components/schemas/ApplicationFilter'
+      example: [
+        { type: string, key: deployment, value: "multi-tenant, per-region, instance, not-applicable"},
+        { type: string, key: market, value: "NAM, EU etc."},
+        { type: string, key: region, value: "NOR, DACH etc."},
+        { type: string, key: country, value: "United States, Canada etc."},
+        { type: string, key: sub-region, value: "Central, South, North etc."},
+        { type: string, key: language, value: "Portuguese, Deutsch etc."},
+        { type: boolean, key: sso-enabled, value: "true/false"}]
+    ApplicationFilter:
+      type: object
+      properties:
+        type:
+          description: Type of the criteria
+          type: string
+          example: boolean
+        key:
+          description: Display name of the Criteria value
+          type: string
+          example: deployment
+        value:
+          description: Criteria value
+          type: string
+          example: per-region
+    EmailNotification:
+      type: object
+      properties:
+        to:
+          description: The list of users for whom the email is to be sent
+          type: array
+          items:
+            type: string
+          minItems: 1
+          example: [ "application.integrator@philips.com"]
+        cc:
+          description: The list of users for whom the email is to be cc'd
+          type: array
+          items:
+            type: string
+          example: [ "business.owner@philips.com", "market.approver@philips.com"]
+        subject:
+          description: The email subject
+          type: string
+          example: Application 'DoseWise Portal' registered
+        message:
+          description: The email content
+          type: string
+          example: Application 'DoseWise Portal' has been registered for Ultrasound business.
+        type:
+          type: string
+          description: The type of email notification to be sent
+          enum: [app-registered, app-business-owner-approved, app-solution-owner-approved]
+          example: app-registered
+        metadata:
+          description: The metadata that will be used to populate the placeholders in email template
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            appName: DoseWise Portal
+            appIcon: https://d1u65tovhg2ye9.cloudfront.net/icons/dosewiseportal
+    Notification:
+      type: object
+      properties:
+        title:
+          description: Notification title
+          type: string
+          example: Machine utilization alert
+        message:
+          description: Notification message
+          type: string
+          example: High Utilization Alert for CT Scanner 1
+        category:
+          description: Notification category
+          type: string
+          example: Informational, Actionable, Reminder, Alert, Confirmation, Promotional, Feedback, Error/Warning, Security, Maintenance
+        source:
+          type: object
+          properties:
+            id:
+              description: Source application id, unique ID issued by OneSpace that represents a source. Such as an application
+              type: string
+              example: "550e8400-e29b-41d4-a716-446655440000"
+        recipients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recipient"
+        createdAt:
+          type: string
+          format: date-time
+          description: DateTime In UTC when this notification was generated
+          example: 2024-09-18T13:09:05
+        expiry:
+          type: string
+          format: date-time
+          description: Date & Time after which notification will no longer be sent to the consumer
+          example: 2024-09-25T13:09:05
+    NotificationResponse:
+      type: object
+      properties:
+        id:
+          description: Notification id, unique ID issued by OneSpace that represents a notification.
+          type: string
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        title:
+          description: Notification title
+          type: string
+          example: Machine utilization alert
+        message:
+          description: Notification message
+          type: string
+          example: High Utilization Alert for CT Scanner 1
+        category:
+          description: Notification category
+          type: string
+          example: Informational, Actionable, Reminder, Alert, Confirmation, Promotional, Feedback, Error/Warning, Security, Maintenance
+        source:
+          type: object
+          properties:
+            id:
+              description: Source application id, unique ID issued by OneSpace that represents a source. Such as an application
+              type: string
+              example: "550e8400-e29b-41d4-a716-446655440000"
+            name:
+              description: Source application name
+              type: string
+              example: "Application Name"
+        recipients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recipient"
+        createdAt:
+          type: string
+          format: date-time
+          description: DateTime In UTC when this notification was generated
+          example: 2024-09-18T13:09:05
+        expiry:
+          type: string
+          format: date-time
+          description: Date & Time after which notification will no longer be sent to the consumer
+          example: 2024-09-25T13:09:05
+        read:
+          type: boolean
+          example: false
+    NotificationList:
+      type: array
+      items:
+        $ref: "#/components/schemas/NotificationResponse"
+    NotificationRead:
+      type: string
+      description: Notification guid
+      example: "550e8400-e29b-41d4-a716-446655440000"
+    Recipient:
+      type: string
+      description: Recipient guid
+      example: "550e8400-e29b-41d4-a716-446655440000"
+    ReadNotificationList:
+      type: array
+      items:
+        $ref: "#/components/schemas/NotificationRead"
+    source:
+      type: object
+      properties:
+        id:
+          description: Source application id, unique ID issued by OneSpace that represents a source. Such as an application
+          type: string
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          description: Source application name
+          type: string
+          example: "Application Name"
+    Action:
+      type: object
+      properties:
+        initiator:
+          description: The logged user
+          type: string
+          format: uuid
+          example: 1f5f4f59-e251-4f19-a6bf-1528eeb8bb2f
+        potentialOwner:
+          description: The user to whom the action is assigned
+          type: array
+          items:
+            type: string
+          example: [ "1f76732b-861b-4997-b1f4-788eab3c0cba",
+                     "7583f5f4-ea78-442a-99f4-0caddd45fb19"]
+        status:
+          description: The status of the action. By default, it is todo.
+          type: string
+          enum: [todo, done, expired]
+          example: todo
+        dateTime:
+          type: string
+          format: date-time
+          description: Date and time when this action was created.
+          example: 2024-09-20T13:09:05
+        type:
+          type: string
+          enum: [informational, reminder, alert, feedback]
+          example: alert
+        title:
+          description: The title for the action.
+          type: string
+          example: Reduce temperature in control room
+        notify:
+          description: This represents the notification flag. If set to true, the creation of an action generates a notification. By default it is false.
+          type: boolean
+          example: true
+        message:
+          description: Message that describes the action.
+          type: string
+          example: The temperature in the control room is outside a threshold. Measured value 60 degrees centigrade
+        dueDateTime:
+          type: string
+          format: date-time
+          description: The date & time in UTC by when the specific action should be completed.
+          example: 2024-09-30T13:09:05
+        expiryDateTime:
+          type: string
+          format: date-time
+          description: The date & time in UTC by when the specific action is no longer relevant.
+          example: 2024-10-05T13:09:05
+        metadata:
+          description: Additional information as key-value pairs for extensibility.
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            location: L1234
+        relatedObject:
+          description: The reference to the object (tile, widget, data grid, etc.) associated with the action
+          type: string
+          example: "https://www.google.com/"
+        source:
+          type: object
+          properties:
+            id:
+              description: Unique ID generated by OneSpace that represents a source. Eg. application
+              type: string
+              example: "550e8400-e29b-41d4-a716-446655440000"
+
+    ActionList:
+      type: array
+      items:
+        $ref: "#/components/schemas/ActionResponse"
+
+    ActionResponse:
+      type: object
+      properties:
+        actionId:
+          description: Unique Id that represents an action.
+          type: string
+          example: "67b5d981-1134-4600-8047-1a914b51391f"
+        initiator:
+          description: The logged user
+          type: string
+          format: uuid
+          example: 1f5f4f59-e251-4f19-a6bf-1528eeb8bb2f
+        potentialOwner:
+          description: The user to whom the action is assigned
+          type: array
+          items:
+            type: string
+          example: [ "1f76732b-861b-4997-b1f4-788eab3c0cba",
+                     "7583f5f4-ea78-442a-99f4-0caddd45fb19"]
+        status:
+          description: The status of the action.
+          type: string
+          enum: [todo, done, expired]
+          example: done
+        dateTime:
+          type: string
+          format: date-time
+          description: Date and time when this action was created.
+          example: 2024-09-20T13:09:05
+        type:
+          type: string
+          enum: [informational, reminder, alert, feedback]
+          example: alert
+        title:
+          description: The title for the action.
+          type: string
+          example: Reduce temperature in control room
+        notify:
+          description: This represents the notification flag. If set to true, the creation of an action generates a notification. By default it is false.
+          type: boolean
+          example: true
+        message:
+          description: Message that describes the action.
+          type: string
+          example: The temperature in the control room is outside a threshold. Measured value 60 degrees centigrade
+        dueDateTime:
+          type: string
+          format: date-time
+          description: The date & time in UTC by when the specific action should be completed.
+          example: 2024-09-30T13:09:05
+        expiryDateTime:
+          type: string
+          format: date-time
+          description: The date & time in UTC by when the specific action is no longer relevant.
+          example: 2024-10-05T13:09:05
+        metadata:
+          description: Additional information as key-value pairs for extensibility.
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            location: L1234
+        relatedObject:
+          description: The reference to the object (tile, widget, data grid, etc.) associated with the action
+          type: string
+          example: "https://www.google.com/"
+        source:
+          type: object
+          properties:
+            id:
+              description: Unique ID generated by OneSpace that represents a source. Eg. application
+              type: string
+              example: "0d9972a1-5715-4f88-a3b5-e00826ae81b1"
+            name:
+              description: Source application name
+              type: string
+              example: "Customer Service Portal"
+    ActionID:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents an action
+          type: string
+          format: uuid
+          example: 120d45fc-314a-4d87-831d-d69f253263f6
+
+    ActionPatchRequest:
+      type: array
+      items:
+        $ref: "#/components/schemas/ActionUpdate"
+
+    ActionUpdate:
+      type: object
+      properties:
+        actionId:
+          description: Unique Id that represents an action.
+          type: string
+          example: "67b5d981-1134-4600-8047-1a914b51391f"
+        title:
+          description: The title for the action.
+          type: string
+          example: Reduce temperature in control room
+        status:
+          description: The status of the action.
+          type: string
+          enum: [todo, done, expired]
+          example: done
+        initiator:
+          description: The logged user
+          type: string
+          format: uuid
+          example: 1f5f4f59-e251-4f19-a6bf-1528eeb8bb2f
+        potentialOwner:
+          description: The user to whom the action is assigned
+          type: array
+          items:
+            type: string
+          example: [ "7583f5f4-ea78-442a-99f4-0caddd45fb19"]
+        completedAtDateTime:
+          type: string
+          format: date-time
+          description: The date & time in UTC at which the action is completed.
+          example: 2024-10-05T13:09:05
+        source:
+          type: object
+          properties:
+            id:
+              description: Unique ID generated by OneSpace that represents a source. Eg. application
+              type: string
+              example: "0d9972a1-5715-4f88-a3b5-e00826ae81b1"
+
+    Group:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents an group id
+          type: string
+          format: uuid
+          example: 120d45fc-314a-4d87-831d-d69f253263f6
+        name:
+          description: Group name
+          type: string
+          example: ApplicationIntegratorsGroup
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+    User:
+      type: object
+      properties:
+        id:
+          description: Unique Identifier that represents an user id
+          type: string
+          format: uuid
+          example: 120d45fc-314a-4d87-831d-d69f253263f6
+        userName:
+          description: User name
+          type: string
+          example: application.integrator@philips.com
+        userEmail:
+          description: User email
+          type: string
+          example: application.integrator@philips.com
+    GroupList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Group"
+    NonOneSpaceApplication:
+      type: object
+      required:
+        - name
+        - description
+        - url
+      properties:
+        name:
+          description: The Name of the non OneSpace application
+          type: string
+          example: DoseWise Portal
+        description:
+          description: The Description of the non OneSpace application
+          type: string
+          example: DoseWise Portal is a vendor-agnostic, web-based solution that collects, measures, analyzes, and reports patient & staff radiation exposure, assisting you to take control of quality of care, efficiency, patient and staff safety.
+        url:
+          description: The URL of the non OneSpace application
+          type: string
+          example: https://dosewiseportal.com
+        status:
+          description: The Status of the non OneSpace application
+          type: string
+          example: Active, Inactive, Deleted
+        order:
+          description: The Order of the non OneSpace application
+          type: integer
+          example: 1
+        icon:
+          description: Icon of the non OneSpace application
+          type: string
+          format: url
+          example: https://d1u65tovhg2ye9.cloudfront.net/icons/doswiseportal.png
+        registeredBy:
+          description: Email address of the hospital administrator requesting the non OneSpace application registration
+          type: string
+          example: john.doe@philips.com
+        registeredDateTime:
+          type: string
+          format: date-time
+          description: Date & Time at which the non OneSpace application was registered by the hospital administrator
+          example: 2024-01-22T13:09:04+0000
+    NonOneSpaceApplicationList:
+      type: array
+      items:
+        $ref: "#/components/schemas/NonOneSpaceApplication"
+    NonOneSpaceApplicationOrder:
+      type: object
+      required:
+        - id
+        - order
+      properties:
+        id:
+          description: The non OneSpace application id.
+          type: string
+          example: 120d45fc-314a-4d87-831d-d69f253263f6
+        order:
+          description: The Name of the Non OneSpace application
+          type: integer
+          example: 1
+    NonOneSpaceApplicationOrderList:
+      type: array
+      items:
+        $ref: "#/components/schemas/NonOneSpaceApplicationOrder"
+  responses:
+    200:
+      description: |
+        **Request succeeded**.
+    201:
+      description: |
+        **Request succeeded and new Resource created**.
+    202:
+      description: |
+        **The request has been accepted for processing, but the processing has not been completed**
+    204:
+      description: |
+        **No**
+    206:
+      description: |
+        **Partial Content**. Getting partial Content
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    400:
+      description: |
+        **Bad Request**. Request is unparsable, syntactically incorrect, or violates 
+        schema.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    401:
+      description: |
+        **Unauthorized**. Authorization failure due to missing or invalid session cookie.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/UnAuthorizedRequestError'
+    403:
+      description: |
+        **Forbidden**. Operation is not permitted based on the supplied authorization.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    404:
+      description: |
+        **Not Found**. Specified resource does not exist.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ResourceNotFoundError'
+    405:
+      description: |
+        **Method Not Allowed**. The method specified for the request is not allowed.
+
+    406:
+      description: |
+        **Not Acceptable**. The media type is invalid.
+
+    409:
+      description: |
+        **Conflict**. Request server refused to create or update a resource that already exists or has conflicting information.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+
+    413:
+      description: |
+        **Request Entity Too Large**. The server is refusing to process a request because the 
+        request entity is larger than the server is willing or able to process
+
+    415:
+      description: |
+        **Unsupported Media Type**. The media type in the request is not supported.
+
+    429:
+      description: |
+        **Too Many Requests**. The request quota has been filled. The server is throttling requests to prevent overload. 
+
+    500:
+      description: |
+        **Internal Server Error**. The server encountered an unexpected condition which prevented 
+        it from fulfilling the request.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/InternalServerError'
+
+    502:
+      description: |
+        **Bad Gateway**. The server received an invalid response from the upstream server.
+
+    503:
+      description: |
+        **Service Unavailable**. The server is currently unable to handle the request due to a 
+        temporary overloading or maintenance of the server.
+
+    504:
+      description: |
+        **Gateway Timeout**. The server did not receive a timely response from the upstream 
+        server specified it needed to access in attempting to complete the request 
+
+  parameters:
+    ID:
+      name: id
+      in: path
+      description: Unique ID of the Application.
+      required: true
+      schema:
+        type: string
+        format: uuid
+    Authorization:
+      name: Authorization
+      in: header
+      description: |
+        Authenticate requests using an IAM access token with the 'Bearer' HTTP 
+        authorization.
+      required: true
+      schema:
+        type: string
+    APIVersion:
+      name: API-Version
+      in: header
+      description: |
+        API version of the identity management service. Supported value - `1`
+      required: true
+      schema:
+        type: integer
+
+  securitySchemes:
+    onespaceCookieAuth:
+      type: apiKey
+      in: cookie
+      name: onespacecookie
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - onespaceCookieAuth: []
+  - bearerAuth: []

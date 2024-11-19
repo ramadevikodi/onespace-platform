@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.philips.onespace</groupId>
+    <artifactId>onespace-sdk</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
+        <jacoco.version>0.8.8</jacoco.version>
+        <maven.test.skip>false</maven.test.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.shade.plugin.version>3.2.1</maven.shade.plugin.version>
+        <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+        <aws.java.sdk.version>2.25.50</aws.java.sdk.version>
+        <junit5.version>5.8.1</junit5.version>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <lombok.verion>1.18.30</lombok.verion>
+        <mockito.inline.version>5.2.0</mockito.inline.version>
+		<json.version>20231013</json.version>
+		<everit.json.schema.version>1.5.1</everit.json.schema.version>
+		<jackson.databind.version>2.16.0-rc1</jackson.databind.version>
+		<commons-lang3.version>3.13.0</commons-lang3.version>
+        <sdk.common.version>1.0.0.0</sdk.common.version>
+        <gson.version>2.10.1</gson.version>
+        <junit5.version>5.8.1</junit5.version>
+        <mockito-junit-jupiter.version>5.2.0</mockito-junit-jupiter.version>
+        <encoder.version>1.2.3</encoder.version>
+        <spotbugs-annotations.version>4.5.3</spotbugs-annotations.version>
+        <findbugs.version>3.0.1</findbugs.version>
+    </properties>
+
+    <modules>
+        <module>common</module>
+        <module>sentinel</module>
+        <module>iam</module>
+        <module>dataaccess</module>
+        <module>app-notification</module>
+        <module>storage</module>
+    </modules>
+    
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.2</version>
+	</parent>
+    <repositories>
+        <repository>
+            <id>EPO-Maven-Release</id>
+            <name>artifactory-ehv.ta.philips.com-releases</name>
+            <url>https://artifactory-ehv.ta.philips.com:443/artifactory/hsp-maven-central-remote</url>
+        </repository>
+        <repository>
+            <id>jackson-talend</id>
+            <name>Maven jackson Repository</name>
+            <url>https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceRelease/</url>
+        </repository>
+
+        <repository>
+            <id>repo4</id>
+            <name>Maven Central</name>
+            <url>https://www.dcm4che.org/maven2/</url>
+        </repository>
+    </repositories>
+    <build>
+        <pluginManagement>
+
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>17</source>
+                        <target>17</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
